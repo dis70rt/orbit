@@ -34,7 +34,7 @@ Copy this prompt into an AI coding agent with terminal access to your Linux desk
 
 ```text
 Install and set up Orbit, the Hyprland radial shortcut launcher, from
-https://github.com/dis70rt/orbit using the development branch.
+https://github.com/dis70rt/orbit using the main branch.
 
 Read the repository's README and installer before starting. Clone it into an
 available user-owned directory, or update an existing clean Orbit checkout

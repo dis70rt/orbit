@@ -14,6 +14,19 @@ behavior they change, how they were tested, and any remaining limitations.
 Use concise commit subjects that describe the resulting change. Do not commit
 local configurations, logs, caches, credentials, or unrelated files.
 
+## Pull requests and required checks
+
+`main` contains tested versions. Develop changes on `development` or a feature
+branch and open a pull request targeting `main` when they are ready.
+Both `Tests (Python 3.10)` and `Tests (Python 3.14)` must pass before merging.
+The checks run on every pull request and push. Keep the PR branch up to date
+with `main` so the checks validate the changes against the current base.
+
+GitHub branch protection enforces the required PR and test checks, including
+for administrators. Direct pushes to `main`, force pushes, and branch deletion
+are blocked. The local pre-commit hook provides an additional check before
+changes reach GitHub.
+
 ## Desktop smoke test
 
 Run `./bin/orbit check`, then start `./bin/orbit serve`. Verify:
