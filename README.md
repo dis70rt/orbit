@@ -21,6 +21,10 @@ Orbit brings the hold-and-release interaction of GTA V's weapon wheel to your
 Linux desktop. Open applications, folders, websites, or commands from a
 cursor-centered HUD with monochrome icons, translucent wedges, and subtle motion.
 
+<p align="center">
+  <img src="assets/demo.gif" alt="Orbit radial shortcut launcher demo on Hyprland" width="100%">
+</p>
+
 ## Install with an AI agent
 
 <details>
