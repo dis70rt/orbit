@@ -1,0 +1,11 @@
+{
+  "x": "https://raw.githubusercontent.com/twbs/icons/v1.13.1/icons/twitter-x.svg",
+  "linkedin": "https://raw.githubusercontent.com/twbs/icons/v1.13.1/icons/linkedin.svg",
+  "youtube": "https://raw.githubusercontent.com/twbs/icons/v1.13.1/icons/youtube.svg",
+  "spotify": "https://raw.githubusercontent.com/twbs/icons/v1.13.1/icons/spotify.svg",
+  "github": "https://raw.githubusercontent.com/twbs/icons/v1.13.1/icons/github.svg",
+  "files": "https://raw.githubusercontent.com/twbs/icons/v1.13.1/icons/folder-fill.svg",
+  "vscode": "https://raw.githubusercontent.com/devicons/devicon/v2.17.0/icons/vscode/vscode-plain.svg",
+  "bootstrap-LICENSE.txt": "https://raw.githubusercontent.com/twbs/icons/v1.13.1/LICENSE",
+  "devicon-LICENSE.txt": "https://raw.githubusercontent.com/devicons/devicon/v2.17.0/LICENSE"
+}

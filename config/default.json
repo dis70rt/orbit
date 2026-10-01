@@ -1,0 +1,57 @@
+{
+  "radius": 170,
+  "dead_zone": 56,
+  "accent": [
+    0.94,
+    0.94,
+    0.94
+  ],
+  "animations": true,
+  "show_label": true,
+  "shortcuts": [
+    {
+      "label": "X",
+      "icon": "bundled:x",
+      "type": "website",
+      "value": "https://x.com"
+    },
+    {
+      "label": "LinkedIn",
+      "icon": "bundled:linkedin",
+      "type": "website",
+      "value": "https://www.linkedin.com"
+    },
+    {
+      "label": "YouTube",
+      "icon": "bundled:youtube",
+      "type": "website",
+      "value": "https://www.youtube.com"
+    },
+    {
+      "label": "Spotify",
+      "icon": "bundled:spotify",
+      "type": "website",
+      "value": "https://open.spotify.com"
+    },
+    {
+      "label": "VS Code",
+      "icon": "bundled:vscode",
+      "type": "command",
+      "value": [
+        "code"
+      ]
+    },
+    {
+      "label": "GitHub",
+      "icon": "bundled:github",
+      "type": "website",
+      "value": "https://github.com"
+    },
+    {
+      "label": "Files",
+      "icon": "bundled:files",
+      "type": "folder",
+      "value": "~"
+    }
+  ]
+}

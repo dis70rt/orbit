@@ -1,0 +1,5 @@
+#!/bin/sh
+# Resolve the project independently of the caller's current directory.
+ORBIT_ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+export PYTHONPATH="$ORBIT_ROOT${PYTHONPATH:+:$PYTHONPATH}"
+exec python3 -m orbit "$@"
