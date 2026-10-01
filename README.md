@@ -10,6 +10,7 @@
 </p>
 
 <p align="center">
+  <a href="#install-with-an-ai-agent">Install with AI</a> &middot;
   <a href="#quick-start">Quick start</a> &middot;
   <a href="#desktop-integration">Desktop integration</a> &middot;
   <a href="#configuration">Configuration</a> &middot;
@@ -19,6 +20,44 @@
 Orbit brings the hold-and-release interaction of GTA V's weapon wheel to your
 Linux desktop. Open applications, folders, websites, or commands from a
 cursor-centered HUD with monochrome icons, translucent wedges, and subtle motion.
+
+## Install with an AI agent
+
+<details>
+<summary>Copy the AI setup prompt</summary>
+
+Copy this prompt into an AI coding agent with terminal access to your Linux desktop:
+
+```text
+Install and set up Orbit, the Hyprland radial shortcut launcher, from
+https://github.com/dis70rt/orbit using the development branch.
+
+Read the repository's README and installer before starting. Clone it into an
+available user-owned directory, or update an existing clean Orbit checkout
+without discarding local changes. Detect my distro and install Git and system
+Python 3.10+ if needed. Run ./install.sh --dry-run, then ./install.sh --yes as
+my regular user. Use sudo for native dependencies only. Hyprland is required.
+
+Add ~/.local/bin to my shell's PATH if needed. Back up my active Hyprland
+configuration and load exactly one generated Orbit integration file, using
+the paths printed by the installer and my existing hyprlang or Lua format.
+Replace any previous Orbit integration line to prevent duplicate bindings.
+Preserve my other desktop settings and shortcut configuration.
+
+Run the repository checks. In a running Hyprland session, reload the config,
+check hyprctl configerrors, run ~/.local/bin/orbit check, and restart Orbit
+with the installed launcher. Restore the config backup if the integration
+introduces errors. If no Hyprland session is running, finish installation
+and explain the remaining session steps without claiming live verification.
+
+Report what you installed and changed, and help me verify that holding middle
+mouse opens the wheel, releasing launches the selection, and center release
+or Escape cancels. Explain how to change the trigger to preserve middle click.
+```
+
+</details>
+
+Prefer a terminal walkthrough? See [Quick start](#quick-start).
 
 ## Project status
 
