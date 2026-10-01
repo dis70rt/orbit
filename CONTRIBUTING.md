@@ -27,6 +27,10 @@ Run `./bin/orbit check`, then start `./bin/orbit serve`. Verify:
 - Blur inside the wheel with a clear desktop outside it.
 - `./bin/orbit quit` closes the daemon cleanly.
 
+The mouse bindings use Hyprland's `event` dispatcher. Test the real event channel
+as well as CLI preview commands. Press and release must remain ordered, including
+a fast tap. CLI-only tests do not prove physical mouse release behavior.
+
 Record the Hyprland version and display arrangement when reporting desktop issues.
 
 ## Architecture
@@ -39,6 +43,9 @@ Record the Hyprland version and display arrangement when reporting desktop issue
 | `ports` | Controller service interfaces |
 | `controller` | Gesture lifecycle and action dispatch orchestration |
 | `hyprland` | Compositor queries |
+| `events` | Pure ordered event decoding |
+| `input` | Compositor socket connection and main-loop integration |
+| `cursor` | Global cursor sampling during active gestures |
 | `launcher` | Configured action execution |
 | `icons` | Asset resolution |
 | `motion` | Pure transition state and easing |
@@ -48,7 +55,8 @@ Record the Hyprland version and display arrangement when reporting desktop issue
 | `__main__` | CLI parsing and diagnostics |
 
 Keep GTK imports out of the pure state modules. The controller uses structural
-interfaces so services can be replaced by test doubles. Frame-clock callbacks stop
+interfaces so services can be replaced by test doubles. The overlay must use keyboard mode NONE: Hyprland clears held mouse buttons
+when a focusable layer maps. Frame-clock callbacks stop
 when transitions settle; the hidden wheel should not run an animation timer.
 
 ## Versions and assets

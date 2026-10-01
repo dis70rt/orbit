@@ -3,7 +3,7 @@
 A radial shortcut launcher for Hyprland, inspired by the GTA V weapon wheel.
 Hold a button, aim at a shortcut, and release to open it.
 
-**Version:** v0.1.0 · **Status:** experimental · **Branch:** development
+**Version:** v0.1.1 · **Status:** experimental · **Branch:** development
 
 Orbit is under active development. Configuration and behavior may change before
 v1.0.0. There is no stable release yet.
@@ -89,11 +89,16 @@ Reload Hyprland and start Orbit once. Subsequent sessions start it through the
 
 Middle mouse (`mouse:274`) is the default trigger. Hold it to show the wheel,
 move toward a wedge, and release to launch. Release in the center or press Escape
-to cancel. This binding consumes middle click, including its uses in other apps.
+to cancel. The wheel remains open only until release; tapping does not toggle it.
+This binding consumes middle click, including its uses in other apps.
 
 For a modified trigger, change both hyprlang bindings to `SUPER`, or set the Lua
 `trigger` to `SUPER + mouse:274`. The release binding ignores modifiers so releasing
-Super first does not leave the wheel open.
+Super first does not leave the wheel open. Both bindings emit compositor events
+that Orbit receives in order through Hyprland's IPC socket. The daemon must be
+running before pressing the trigger. The wheel does not grab keyboard or pointer
+focus, preserving Hyprland's held-button state. Escape cancellation uses a
+non-consuming compositor binding, so Escape also reaches the underlying app.
 
 The integration files enable blur for the `orbit` layer namespace and exclude
 fully transparent pixels. Hyprland's global `decoration.blur.enabled` must be
@@ -183,8 +188,6 @@ See [`CONTRIBUTING.md`](CONTRIBUTING.md) for the workflow and architecture.
 
 - The wheel stays centered at the initial cursor position and can be clipped near
   monitor edges.
-- Live highlighting receives pointer events on the originating monitor. Release
-  selection still uses the global cursor position after crossing onto another.
 - Multi-monitor scaling and rotation have unit coverage but have not been tested
   on physical multi-monitor hardware.
 - The UI follows the wheel interaction and silhouette style; it does not contain
@@ -199,6 +202,7 @@ belong to their owners. Orbit is not affiliated with those brands or Rockstar Ga
 
 ## References
 
+- [Hyprland event dispatcher](https://wiki.hypr.land/0.54.0/Configuring/Dispatchers/)
 - [Hyprland bindings](https://wiki.hypr.land/Configuring/Basics/Binds/)
 - [Hyprland layer rules](https://wiki.hypr.land/Configuring/Basics/Window-Rules/#layer-rules)
 - [GTK frame-clock callbacks](https://docs.gtk.org/gtk4/method.Widget.add_tick_callback.html)
