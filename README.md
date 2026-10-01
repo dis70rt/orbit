@@ -57,6 +57,80 @@ runtime packages for your distribution before running the launcher.
 
 ## Quick start
 
+### Install for your user
+
+Clone or download the repository, then run:
+
+```sh
+./install.sh
+```
+
+Run as your regular desktop user. The installer uses `sudo` only for native
+packages and keeps the package manager's confirmation prompt. It supports Fedora,
+Arch, Debian, Ubuntu, and derivatives identified by `/etc/os-release`.
+Hyprland is required; its package is included when `hyprctl` is missing.
+You must log into a Hyprland Wayland session to use Orbit.
+
+| Installed item | Location |
+| --- | --- |
+| Launcher | `~/.local/bin/orbit` |
+| Runtime and icons | `$XDG_DATA_HOME/orbit`, default `~/.local/share/orbit` |
+| Integration files | `$XDG_CONFIG_HOME/orbit/integration`, default `~/.config/orbit/integration` |
+
+The installer verifies GTK4, Cairo, and GTK4 Layer Shell before copying the
+application. It preserves your shortcut configuration. Add `~/.local/bin` to your
+shell's `PATH` if needed.
+
+Load **one** generated integration file in your Hyprland configuration:
+
+```ini
+# hyprland.conf, with default XDG paths
+source = ~/.config/orbit/integration/hyprland.conf
+```
+
+Or, for Lua:
+
+```lua
+dofile(os.getenv('HOME') .. '/.config/orbit/integration/hyprland.lua')
+```
+
+Use the exact path printed by the installer if you customize XDG directories.
+Remove any previous Orbit integration line to avoid duplicate bindings. From your
+Hyprland session, run `hyprctl reload`, then `~/.local/bin/orbit check` and
+`~/.local/bin/orbit serve`. The integration starts Orbit on subsequent sessions.
+Edit the generated integration to customize the trigger; reinstalling regenerates
+these integration files. Restart an existing Orbit daemon after reinstalling.
+
+<details>
+<summary>Installer options and distribution compatibility</summary>
+
+```sh
+./install.sh --dry-run    # Show packages and destinations without changing anything
+./install.sh --yes       # Accept native package-manager confirmation prompts
+./install.sh --skip-deps # Install using dependencies you already supplied
+```
+
+Python 3.10 or newer at `/usr/bin/python3` is needed to run the installer. On a
+minimal system, install your distribution's Python package first. Orbit uses the
+system Python so it can load native GTK bindings.
+
+Older distro releases may lack Hyprland or GTK4 Layer Shell in their enabled
+repositories. Package installation will stop in that case; use a release that
+provides them or install the dependencies yourself and retry with `--skip-deps`.
+No third-party repositories or source builds are added automatically.
+Other distros can use `--skip-deps` after manually installing the requirements.
+Immutable variants such as Fedora Silverblue need dependencies installed through
+their host package-management workflow before using `--skip-deps`.
+
+Rerun the installer from an updated checkout to update Orbit. Dependencies are
+installed system-wide, while Orbit's files belong to your user. The installer
+generates integration files and prints setup instructions; it does not modify
+your existing Hyprland configuration or launch a compositor.
+
+</details>
+
+### Run from a checkout
+
 Clone or download the repository, then run these commands from the checkout:
 
 ```sh
@@ -290,5 +364,9 @@ brands or Rockstar Games.
 - [GTK frame-clock callbacks](https://docs.gtk.org/gtk4/method.Widget.add_tick_callback.html)
 - [GTK4 Layer Shell](https://wmww.github.io/gtk4-layer-shell/)
 - [Python layer-shell linking](https://github.com/wmww/gtk4-layer-shell/blob/main/linking.md)
+- [Native Python GTK packages by distribution](https://pygobject.gnome.org/getting_started.html)
+- [Fedora GTK4 Layer Shell package](https://packages.fedoraproject.org/pkgs/gtk4-layer-shell/gtk4-layer-shell/)
+- [Arch GTK4 Layer Shell package](https://archlinux.org/packages/extra/x86_64/gtk4-layer-shell/)
+- [Ubuntu GTK4 Layer Shell introspection package](https://packages.ubuntu.com/resolute/gir1.2-gtk4layershell-1.0)
 
 </details>
