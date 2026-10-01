@@ -15,6 +15,7 @@ from orbit.hyprland import HyprlandClient
 from orbit.launcher import ShortcutLauncher
 from orbit.controller import WheelController
 from orbit.view import WheelView
+from orbit.input import HyprlandInput
 
 
 class OrbitApplication(Gtk.Application):
@@ -23,13 +24,23 @@ class OrbitApplication(Gtk.Application):
                          flags=Gio.ApplicationFlags.HANDLES_COMMAND_LINE)
         self.settings = settings
         self.controller = None
+        self.input = None
 
     def do_startup(self):
         Gtk.Application.do_startup(self)
         self.hold()
         session = WheelSession(self.settings)
-        view = WheelView(self, self.settings, session, lambda: self.controller.cancel())
+        view = WheelView(self, self.settings, session)
         self.controller = WheelController(session, HyprlandClient(), view, ShortcutLauncher())
+        self.input = HyprlandInput(self.controller.handle, self.controller.cancel)
+        self.input.start()
+
+    def do_shutdown(self):
+        if self.input is not None:
+            self.input.stop()
+        if self.controller is not None:
+            self.controller.view.close()
+        Gtk.Application.do_shutdown(self)
 
     def do_command_line(self, command_line):
         args = command_line.get_arguments()[1:]

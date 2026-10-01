@@ -4,10 +4,12 @@
 local orbit = os.getenv('HOME') .. '/Projects/Orbit/bin/orbit'
 local trigger = 'mouse:274'
 hl.on('hyprland.start', function() hl.exec_cmd(orbit .. ' serve') end)
-hl.bind(trigger, hl.dsp.exec_cmd(orbit .. ' show'), { description = 'Open Orbit wheel' })
-hl.bind(trigger, hl.dsp.exec_cmd(orbit .. ' release'), {
+hl.bind(trigger, hl.dsp.event('orbit:press'), { description = 'Open Orbit wheel' })
+hl.bind(trigger, hl.dsp.event('orbit:release'), {
     release = true, ignore_mods = true, description = 'Release Orbit selection'
 })
+
+hl.bind('Escape', hl.dsp.event('orbit:cancel'), { non_consuming = true })
 
 hl.layer_rule({
     name = 'orbit-hud',

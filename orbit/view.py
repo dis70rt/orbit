@@ -4,12 +4,14 @@ import math
 import time
 from gi.repository import Gtk, Gdk, Gtk4LayerShell as Layer
 from orbit.icons import IconResolver
+from orbit.cursor import CursorTracker
+from orbit.hyprland import HyprlandClient
 from orbit.motion import WheelMotion
 from orbit.renderer import WheelRenderer
 
 
 class WheelView:
-    def __init__(self, application, settings, session, cancel):
+    def __init__(self, application, settings, session):
         self.settings, self.session = settings, session
         self.motion = WheelMotion(len(settings.shortcuts), settings.animations)
         self.tick_id = None
@@ -17,7 +19,7 @@ class WheelView:
         Layer.init_for_window(self.window)
         Layer.set_namespace(self.window, 'orbit')
         Layer.set_layer(self.window, Layer.Layer.OVERLAY)
-        Layer.set_keyboard_mode(self.window, Layer.KeyboardMode.EXCLUSIVE)
+        Layer.set_keyboard_mode(self.window, Layer.KeyboardMode.NONE)
         Layer.set_exclusive_zone(self.window, -1)
         for edge in (Layer.Edge.TOP, Layer.Edge.BOTTOM, Layer.Edge.LEFT, Layer.Edge.RIGHT):
             Layer.set_anchor(self.window, edge, True)
@@ -42,27 +44,13 @@ class WheelView:
             image.set_tooltip_text(shortcut.label)
             self.icons.put(image, 0, 0)
             self.images.append(image)
-        motion = Gtk.EventControllerMotion()
-        motion.connect('motion', self._motion)
-        self.window.add_controller(motion)
-        keys = Gtk.EventControllerKey()
-        keys.connect('key-pressed', lambda _, key, code, state: self._key(key, cancel))
-        self.window.add_controller(keys)
-        self.window.connect('close-request', lambda _: (cancel(), True)[1])
-        self.monitor_origin = (0, 0)
+        self.tracker = CursorTracker(HyprlandClient().cursor, self._global_motion)
 
-    def _key(self, key, cancel):
-        if key == Gdk.KEY_Escape:
-            cancel()
-            return True
-        return False
-
-    def _motion(self, controller, x, y):
-        if not self.session.active:
-            return
-        self.session.move((x + self.monitor_origin[0], y + self.monitor_origin[1]))
-        self.motion.select(self.session.selected, time.monotonic())
-        self._schedule()
+    def _global_motion(self, point):
+        if self.session.active:
+            self.session.move(point)
+            self.motion.select(self.session.selected, time.monotonic())
+            self._schedule()
 
     def _schedule(self):
         if self.tick_id is None:
@@ -92,25 +80,30 @@ class WheelView:
         if matched is None:
             raise RuntimeError(f"GTK cannot locate monitor {monitor['name']}")
         Layer.set_monitor(self.window, matched)
-        Layer.set_keyboard_mode(self.window, Layer.KeyboardMode.EXCLUSIVE)
-        self.monitor_origin = monitor['x'], monitor['y']
+        Layer.set_keyboard_mode(self.window, Layer.KeyboardMode.NONE)
         self.renderer.center = point[0] - monitor['x'], point[1] - monitor['y']
         self.motion.show(time.monotonic())
         self.content.set_opacity(self.motion.visibility.value)
         self.window.present()
         surface = self.window.get_surface()
-        # Restore the default full input region after a previous closing animation.
+        # A focusable layer makes Hyprland release all held buttons on mapping.
+        # Keep the HUD input-transparent and track the compositor cursor instead.
         if surface:
-            surface.set_input_region(None)
+            surface.set_input_region(cairo.Region())
+        self.tracker.start()
         self._schedule()
 
     def hide(self):
+        self.tracker.stop()
         if not self.window.get_visible():
             return
-        # Input and keyboard focus are released immediately, even while fading out.
+        # Stop cursor sampling immediately while the HUD fades out.
         Layer.set_keyboard_mode(self.window, Layer.KeyboardMode.NONE)
         surface = self.window.get_surface()
         if surface:
             surface.set_input_region(cairo.Region())
         self.motion.hide(time.monotonic())
         self._schedule()
+
+    def close(self):
+        self.tracker.close()
